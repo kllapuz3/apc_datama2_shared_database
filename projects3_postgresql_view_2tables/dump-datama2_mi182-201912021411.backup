@@ -1,0 +1,227 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 12.0
+
+-- Started on 2019-12-02 14:11:14
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'SQL_ASCII';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 36 (class 2615 OID 19528)
+-- Name: kllapuz3; Type: SCHEMA; Schema: -; Owner: datama2mi182
+--
+
+CREATE SCHEMA kllapuz3;
+
+
+ALTER SCHEMA kllapuz3 OWNER TO datama2mi182;
+
+SET default_tablespace = '';
+
+--
+-- TOC entry 294 (class 1259 OID 20153)
+-- Name: commodities; Type: TABLE; Schema: kllapuz3; Owner: datama2mi182
+--
+
+CREATE TABLE kllapuz3.commodities (
+    id integer NOT NULL,
+    employee_id integer NOT NULL,
+    com_num integer NOT NULL,
+    com_type character varying(50) NOT NULL,
+    com_validity timestamp(6) without time zone NOT NULL,
+    com_quantity integer NOT NULL,
+    com_brand character varying(50),
+    com_worth integer NOT NULL
+);
+
+
+ALTER TABLE kllapuz3.commodities OWNER TO datama2mi182;
+
+--
+-- TOC entry 293 (class 1259 OID 20151)
+-- Name: commodities_id_seq; Type: SEQUENCE; Schema: kllapuz3; Owner: datama2mi182
+--
+
+CREATE SEQUENCE kllapuz3.commodities_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE kllapuz3.commodities_id_seq OWNER TO datama2mi182;
+
+--
+-- TOC entry 4050 (class 0 OID 0)
+-- Dependencies: 293
+-- Name: commodities_id_seq; Type: SEQUENCE OWNED BY; Schema: kllapuz3; Owner: datama2mi182
+--
+
+ALTER SEQUENCE kllapuz3.commodities_id_seq OWNED BY kllapuz3.commodities.id;
+
+
+--
+-- TOC entry 292 (class 1259 OID 20145)
+-- Name: employee; Type: TABLE; Schema: kllapuz3; Owner: datama2mi182
+--
+
+CREATE TABLE kllapuz3.employee (
+    id integer NOT NULL,
+    emp_num integer NOT NULL,
+    emp_fname character varying(50) NOT NULL,
+    emp_lname character varying(50) NOT NULL,
+    emp_initial character varying(50) NOT NULL,
+    emp_address character varying(50) NOT NULL,
+    emp_dob timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE kllapuz3.employee OWNER TO datama2mi182;
+
+--
+-- TOC entry 297 (class 1259 OID 20192)
+-- Name: employee_commo; Type: VIEW; Schema: kllapuz3; Owner: datama2mi182
+--
+
+CREATE VIEW kllapuz3.employee_commo AS
+ SELECT commodities.id,
+    commodities.com_num,
+    employee.emp_fname,
+    employee.emp_lname
+   FROM (kllapuz3.commodities
+     JOIN kllapuz3.employee ON ((commodities.employee_id = employee.id)))
+  ORDER BY commodities.id;
+
+
+ALTER TABLE kllapuz3.employee_commo OWNER TO datama2mi182;
+
+--
+-- TOC entry 291 (class 1259 OID 20143)
+-- Name: employee_id_seq; Type: SEQUENCE; Schema: kllapuz3; Owner: datama2mi182
+--
+
+CREATE SEQUENCE kllapuz3.employee_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE kllapuz3.employee_id_seq OWNER TO datama2mi182;
+
+--
+-- TOC entry 4051 (class 0 OID 0)
+-- Dependencies: 291
+-- Name: employee_id_seq; Type: SEQUENCE OWNED BY; Schema: kllapuz3; Owner: datama2mi182
+--
+
+ALTER SEQUENCE kllapuz3.employee_id_seq OWNED BY kllapuz3.employee.id;
+
+
+--
+-- TOC entry 3877 (class 2604 OID 20156)
+-- Name: commodities id; Type: DEFAULT; Schema: kllapuz3; Owner: datama2mi182
+--
+
+ALTER TABLE ONLY kllapuz3.commodities ALTER COLUMN id SET DEFAULT nextval('kllapuz3.commodities_id_seq'::regclass);
+
+
+--
+-- TOC entry 3876 (class 2604 OID 20148)
+-- Name: employee id; Type: DEFAULT; Schema: kllapuz3; Owner: datama2mi182
+--
+
+ALTER TABLE ONLY kllapuz3.employee ALTER COLUMN id SET DEFAULT nextval('kllapuz3.employee_id_seq'::regclass);
+
+
+--
+-- TOC entry 4044 (class 0 OID 20153)
+-- Dependencies: 294
+-- Data for Name: commodities; Type: TABLE DATA; Schema: kllapuz3; Owner: datama2mi182
+--
+
+COPY kllapuz3.commodities (id, employee_id, com_num, com_type, com_validity, com_quantity, com_brand, com_worth) FROM stdin;
+1	2	1	TypeA	2006-08-21 00:00:00	50	BrandA	100
+2	1	2	TypeB	2006-08-21 00:00:00	49	BrandB	99
+\.
+
+
+--
+-- TOC entry 4042 (class 0 OID 20145)
+-- Dependencies: 292
+-- Data for Name: employee; Type: TABLE DATA; Schema: kllapuz3; Owner: datama2mi182
+--
+
+COPY kllapuz3.employee (id, emp_num, emp_fname, emp_lname, emp_initial, emp_address, emp_dob) FROM stdin;
+1	1	Steve	Cruz	K	Mandaluyong City	2021-10-21 00:00:00
+2	2	Chris	Reyes	A	Pasay City	2023-12-21 00:00:00
+\.
+
+
+--
+-- TOC entry 4052 (class 0 OID 0)
+-- Dependencies: 293
+-- Name: commodities_id_seq; Type: SEQUENCE SET; Schema: kllapuz3; Owner: datama2mi182
+--
+
+SELECT pg_catalog.setval('kllapuz3.commodities_id_seq', 1, false);
+
+
+--
+-- TOC entry 4053 (class 0 OID 0)
+-- Dependencies: 291
+-- Name: employee_id_seq; Type: SEQUENCE SET; Schema: kllapuz3; Owner: datama2mi182
+--
+
+SELECT pg_catalog.setval('kllapuz3.employee_id_seq', 1, false);
+
+
+--
+-- TOC entry 3881 (class 2606 OID 20158)
+-- Name: commodities commodities_pkey; Type: CONSTRAINT; Schema: kllapuz3; Owner: datama2mi182
+--
+
+ALTER TABLE ONLY kllapuz3.commodities
+    ADD CONSTRAINT commodities_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3879 (class 2606 OID 20150)
+-- Name: employee employee_pkey; Type: CONSTRAINT; Schema: kllapuz3; Owner: datama2mi182
+--
+
+ALTER TABLE ONLY kllapuz3.employee
+    ADD CONSTRAINT employee_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3882 (class 2606 OID 20159)
+-- Name: commodities commodities_employee_id_fkey; Type: FK CONSTRAINT; Schema: kllapuz3; Owner: datama2mi182
+--
+
+ALTER TABLE ONLY kllapuz3.commodities
+    ADD CONSTRAINT commodities_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES kllapuz3.employee(id);
+
+
+-- Completed on 2019-12-02 14:11:14
+
+--
+-- PostgreSQL database dump complete
+--
+
